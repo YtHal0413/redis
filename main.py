@@ -7,7 +7,7 @@ import uuid
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here-56549819'
+app.config['SECRET_KEY'] = '123456789'
 
 # Carrega as variáveis do arquivo .env
 load_dotenv()
@@ -23,53 +23,23 @@ redis_client = redis.Redis(
 TASKS_KEY = "todo_tasks"
 
 def get_tasks():
-    """
-    ALUNOS: Implementem esta função para buscar tarefas do Redis
-    
-    A função deve:
-    1. Conectar ao Redis
-    2. Buscar dados da chave TASKS_KEY
-    3. Deserializar o JSON
-    4. Retornar uma lista de tarefas
-    5. Tratar erros de conexão
-    
-    Formato esperado de retorno:
-    [
-        {
-            "id": "uuid-string",
-            "text": "Texto da tarefa",
-            "completed": False,
-            "order": 0,
-            "created_at": "2023-11-15T10:30:00.000000"
-        }
-    ]
-    """
-    # TODO: Implementar busca no Redis
-    # Dados mock para desenvolvimento (remover após implementar Redis)
-    return [
-        {"id": "1", "text": "Implementar conexão Redis", "completed": False, "order": 0},
-        {"id": "2", "text": "Implementar função get_tasks()", "completed": False, "order": 1},
-        {"id": "3", "text": "Implementar função save_tasks()", "completed": False, "order": 2},
-        {"id": "4", "text": "Testar todas as funcionalidades", "completed": False, "order": 3}
-    ]
+    """Busca a lista de tarefas armazenada no Redis."""
+    try:
+        tasks_data = redis_client.get(TASKS_KEY)
+        if not tasks_data:
+            return []
+
+        tasks = json.loads(tasks_data)
+        return tasks if isinstance(tasks, list) else []
+    except (redis.exceptions.RedisError, json.JSONDecodeError):
+        return []
 
 def save_tasks(tasks):
-    """
-    ALUNOS: Implementem esta função para salvar tarefas no Redis
-    
-    A função deve:
-    1. Conectar ao Redis
-    2. Serializar a lista de tarefas para JSON
-    3. Salvar na chave TASKS_KEY
-    4. Retornar True se sucesso, False se erro
-    5. Tratar erros de conexão
-    
-    Parâmetros:
-    - tasks: Lista de dicionários com as tarefas
-    """
-    # TODO: Implementar salvamento no Redis
-    print(f"MOCK: Salvando {len(tasks)} tarefas no Redis")
-    return False  # Mudar para True após implementar
+    """Serializa e salva a lista de tarefas no Redis."""
+    try:
+        return bool(redis_client.set(TASKS_KEY, json.dumps(tasks)))
+    except (redis.exceptions.RedisError, TypeError, ValueError):
+        return False
 
 def get_pending_count():
     """Contar tarefas pendentes"""
@@ -238,37 +208,3 @@ def api_reorder_tasks():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
-# DICAS PARA ALUNOS:
-#
-# 1. CONFIGURAÇÃO REDIS:
-#    redis_client = redis.Redis(
-#        host='seu-host',
-#        port=6379,
-#        password='sua-senha',  # se necessário
-#        db=0,
-#        decode_responses=True
-#    )
-#
-# 2. IMPLEMENTAR get_tasks():
-#    try:
-#        tasks_data = redis_client.get(TASKS_KEY)
-#        if tasks_data:
-#            return json.loads(tasks_data)
-#        return []
-#    except:
-#        return []
-#
-# 3. IMPLEMENTAR save_tasks():
-#    try:
-#        redis_client.set(TASKS_KEY, json.dumps(tasks))
-#        return True
-#    except:
-#        return False
-#
-# 4. TESTAR CONEXÃO:
-#    try:
-#        redis_client.ping()
-#        print("Redis conectado!")
-#    except:
-#        print("Erro ao conectar ao Redis")

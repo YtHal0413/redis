@@ -8,19 +8,19 @@
 /* Variáveis CSS para temas */
 :root {
     /* Tema claro */
-    --primary-color: #e54724;
-    --primary-dark: #c73e1d;
-    --primary-light: #ff6b4a;
+    --primary-color: #7f28e2;
+    --primary-dark: #5e1fa7;
+    --primary-light: #ae4aff;
     
-    --bg-color: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-tertiary: #e9ecef;
+    --bg-color: #d8d7b9;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #ffffff;
     
     --text-color: #212529;
     --text-secondary: #6c757d;
     --text-muted: #adb5bd;
     
-    --border-color: #dee2e6;
+    --border-color: #b3b29f;
     --shadow: rgba(0, 0, 0, 0.1);
     --shadow-dark: rgba(0, 0, 0, 0.15);
     

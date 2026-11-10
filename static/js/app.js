@@ -214,20 +214,21 @@ class TodoApp {
     
     // Confirmar exclusão de tarefa
     async confirmDeleteTask() {
-        if (!this.taskToDelete) return;
+        const taskId = this.taskToDelete;
+        if (!taskId) return;
         
         try {
             this.hideModal();
             this.showLoading();
             
-            const response = await fetch(`/api/tasks/${this.taskToDelete}`, {
+            const response = await fetch(`/api/tasks/${taskId}`, {
                 method: 'DELETE'
             });
             
             const data = await response.json();
             
             if (data.success) {
-                this.tasks = this.tasks.filter(t => t.id !== this.taskToDelete);
+                this.tasks = this.tasks.filter(t => t.id !== taskId);
                 this.renderTasks();
                 this.updatePendingCount();
                 this.showToast('success', 'Sucesso', 'Tarefa removida com sucesso');
